@@ -48,17 +48,23 @@ public class CursoUI {
                         System.out.println("Curso registrado.");
                     } catch (IllegalArgumentException e) {
                         System.out.println("No se pudo registrar el curso: " + e.getMessage());
+                    } catch (IllegalStateException e) {
+                        System.out.println("No se pudo guardar el curso: " + e.getMessage());
                     }
                     break;
 
                 case 2:
-                    service.listar().forEach(c ->
-                            System.out.println(
-                                    c.getId() + " - " +
-                                            c.getNombre() + " - " +
-                                            c.getCreditos() + " créditos"
-                            )
-                    );
+                    try {
+                        service.listar().forEach(c ->
+                                System.out.println(
+                                        c.getId() + " - " +
+                                                c.getNombre() + " - " +
+                                                c.getCreditos() + " créditos"
+                                )
+                        );
+                    } catch (IllegalStateException e) {
+                        System.out.println("No se pudieron listar los cursos: " + e.getMessage());
+                    }
                     break;
 
                 case 3:
@@ -83,6 +89,8 @@ public class CursoUI {
                         );
                     } catch (IllegalArgumentException e) {
                         System.out.println("No se pudo actualizar el curso: " + e.getMessage());
+                    } catch (IllegalStateException e) {
+                        System.out.println("No se pudo guardar el curso: " + e.getMessage());
                     }
                     break;
 
@@ -98,6 +106,8 @@ public class CursoUI {
                                         : "Curso no encontrado."
                         );
                     } catch (IllegalArgumentException e) {
+                        System.out.println("No se pudo eliminar el curso: " + e.getMessage());
+                    } catch (IllegalStateException e) {
                         System.out.println("No se pudo eliminar el curso: " + e.getMessage());
                     }
                     break;

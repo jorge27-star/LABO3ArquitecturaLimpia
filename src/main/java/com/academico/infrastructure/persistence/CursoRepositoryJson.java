@@ -5,39 +5,46 @@ import com.academico.domain.repository.CursoRepository;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.*;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CursoRepositoryJson implements CursoRepository {
 
-    private final String archivo = "data/cursos.json";
+    private final Path archivo = Path.of("data", "cursos.json");
     private final Gson gson = new Gson();
 
+    @Override
     public List<Curso> listar() {
+        if (Files.notExists(archivo)) {
+            return new ArrayList<>();
+        }
 
-        try (Reader reader = new FileReader(archivo)) {
+        try (var reader = Files.newBufferedReader(archivo)) {
 
             Type tipo = new TypeToken<List<Curso>>() {}.getType();
 
             List<Curso> cursos = gson.fromJson(reader, tipo);
-
+ 
             return cursos != null ? cursos : new ArrayList<>();
 
         } catch (IOException e) {
-            return new ArrayList<>();
+            throw new IllegalStateException("No se pudieron leer los cursos.", e);
         }
     }
 
+    @Override
     public void guardar(List<Curso> cursos) {
-
-        try (Writer writer = new FileWriter(archivo)) {
-
-            gson.toJson(cursos, writer);
-
+        try {
+            Files.createDirectories(archivo.getParent());
+            try (var writer = Files.newBufferedWriter(archivo)) {
+                gson.toJson(cursos, writer);
+            }
         } catch (IOException e) {
-            System.out.println("Error al guardar cursos.");
+            throw new IllegalStateException("No se pudieron guardar los cursos.", e);
         }
     }
 }
