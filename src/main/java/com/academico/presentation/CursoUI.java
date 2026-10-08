@@ -43,11 +43,12 @@ public class CursoUI {
                     System.out.print("Créditos: ");
                     int creditos = sc.nextInt();
 
-                    service.registrar(
-                            new Curso(id, nombre, creditos)
-                    );
-
-                    System.out.println("Curso registrado.");
+                    try {
+                        service.registrar(new Curso(id, nombre, creditos));
+                        System.out.println("Curso registrado.");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("No se pudo registrar el curso: " + e.getMessage());
+                    }
                     break;
 
                 case 2:
@@ -71,33 +72,34 @@ public class CursoUI {
                     System.out.print("Nuevos créditos: ");
                     int creditosAct = sc.nextInt();
 
-                    boolean actualizado = service.actualizar(
-                            new Curso(
-                                    idAct,
-                                    nombreAct,
-                                    creditosAct
-                            )
-                    );
-
-                    System.out.println(
-                            actualizado
-                                    ? "Curso actualizado."
-                                    : "Curso no encontrado."
-                    );
+                    try {
+                        boolean actualizado = service.actualizar(
+                                new Curso(idAct, nombreAct, creditosAct)
+                        );
+                        System.out.println(
+                                actualizado
+                                        ? "Curso actualizado."
+                                        : "Curso no encontrado."
+                        );
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("No se pudo actualizar el curso: " + e.getMessage());
+                    }
                     break;
 
                 case 4:
                     System.out.print("ID a eliminar: ");
                     int idEliminar = sc.nextInt();
 
-                    boolean eliminado =
-                            service.eliminar(idEliminar);
-
-                    System.out.println(
-                            eliminado
-                                    ? "Curso eliminado."
-                                    : "Curso no encontrado."
-                    );
+                    try {
+                        boolean eliminado = service.eliminar(idEliminar);
+                        System.out.println(
+                                eliminado
+                                        ? "Curso eliminado."
+                                        : "Curso no encontrado."
+                        );
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("No se pudo eliminar el curso: " + e.getMessage());
+                    }
                     break;
             }
 

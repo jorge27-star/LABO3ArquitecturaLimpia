@@ -14,9 +14,17 @@ public class CursoService {
     }
 
     public void registrar(Curso curso) {
+        validarCurso(curso);
 
         List<Curso> cursos = repository.listar();
 
+        boolean idDuplicado = cursos.stream()
+                .anyMatch(c -> c.getId() == curso.getId());
+        if (idDuplicado) {
+            throw new IllegalArgumentException("Ya existe un curso con ese ID.");
+        }
+
+        curso.setNombre(curso.getNombre().trim());
         cursos.add(curso);
 
         repository.guardar(cursos);
@@ -27,6 +35,7 @@ public class CursoService {
     }
 
     public boolean actualizar(Curso curso) {
+        validarCurso(curso);
 
         List<Curso> cursos = repository.listar();
 
@@ -34,7 +43,7 @@ public class CursoService {
 
             if (c.getId() == curso.getId()) {
 
-                c.setNombre(curso.getNombre());
+                c.setNombre(curso.getNombre().trim());
                 c.setCreditos(curso.getCreditos());
 
                 repository.guardar(cursos);
@@ -47,6 +56,9 @@ public class CursoService {
     }
 
     public boolean eliminar(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("El ID debe ser mayor que cero.");
+        }
 
         List<Curso> cursos = repository.listar();
 
@@ -57,5 +69,20 @@ public class CursoService {
         }
 
         return eliminado;
+    }
+
+    private void validarCurso(Curso curso) {
+        if (curso == null) {
+            throw new IllegalArgumentException("El curso es obligatorio.");
+        }
+        if (curso.getId() <= 0) {
+            throw new IllegalArgumentException("El ID debe ser mayor que cero.");
+        }
+        if (curso.getNombre() == null || curso.getNombre().isBlank()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacío.");
+        }
+        if (curso.getCreditos() <= 0) {
+            throw new IllegalArgumentException("Los créditos deben ser mayores que cero.");
+        }
     }
 }
