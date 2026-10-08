@@ -1,6 +1,7 @@
-package com.academico.infrastructure;
+package com.academico.infrastructure.persistence;
 
 import com.academico.domain.model.Curso;
+import com.academico.domain.repository.CursoRepository;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -9,7 +10,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CursoRepository {
+public class CursoRepositoryJson implements CursoRepository {
 
     private final String archivo = "data/cursos.json";
     private final Gson gson = new Gson();
