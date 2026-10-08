@@ -3,6 +3,7 @@ package com.academico.infrastructure.persistence;
 import com.academico.domain.model.Curso;
 import com.academico.domain.repository.CursoRepository;
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class CursoRepositoryJson implements CursoRepository {
  
             return cursos != null ? cursos : new ArrayList<>();
 
-        } catch (IOException e) {
+        } catch (IOException | JsonParseException e) {
             throw new IllegalStateException("No se pudieron leer los cursos.", e);
         }
     }

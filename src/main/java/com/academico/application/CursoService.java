@@ -4,13 +4,14 @@ import com.academico.domain.model.Curso;
 import com.academico.domain.repository.CursoRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 public class CursoService {
 
     private final CursoRepository repository;
 
     public CursoService(CursoRepository repository) {
-        this.repository = repository;
+        this.repository = Objects.requireNonNull(repository, "El repositorio de cursos es obligatorio.");
     }
 
     public void registrar(Curso curso) {

@@ -3,6 +3,7 @@ package com.academico.presentation;
 import com.academico.domain.model.Curso;
 import com.academico.application.CursoService;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 public class CursoUI {
@@ -10,7 +11,7 @@ public class CursoUI {
     private final CursoService service;
 
     public CursoUI(CursoService service) {
-        this.service = service;
+        this.service = Objects.requireNonNull(service, "El servicio de cursos es obligatorio.");
     }
 
     public void mostrarMenu(Scanner sc) {
@@ -49,19 +50,24 @@ public class CursoUI {
                     } catch (IllegalArgumentException e) {
                         System.out.println("No se pudo registrar el curso: " + e.getMessage());
                     } catch (IllegalStateException e) {
-                        System.out.println("No se pudo guardar el curso: " + e.getMessage());
+                        System.out.println("No se pudo registrar el curso: " + e.getMessage());
                     }
                     break;
 
                 case 2:
                     try {
-                        service.listar().forEach(c ->
-                                System.out.println(
-                                        c.getId() + " - " +
-                                                c.getNombre() + " - " +
-                                                c.getCreditos() + " créditos"
-                                )
-                        );
+                        var cursos = service.listar();
+                        if (cursos.isEmpty()) {
+                            System.out.println("No hay cursos registrados.");
+                        } else {
+                            cursos.forEach(c ->
+                                    System.out.println(
+                                            c.getId() + " - " +
+                                                    c.getNombre() + " - " +
+                                                    c.getCreditos() + " créditos"
+                                    )
+                            );
+                        }
                     } catch (IllegalStateException e) {
                         System.out.println("No se pudieron listar los cursos: " + e.getMessage());
                     }
@@ -90,7 +96,7 @@ public class CursoUI {
                     } catch (IllegalArgumentException e) {
                         System.out.println("No se pudo actualizar el curso: " + e.getMessage());
                     } catch (IllegalStateException e) {
-                        System.out.println("No se pudo guardar el curso: " + e.getMessage());
+                        System.out.println("No se pudo actualizar el curso: " + e.getMessage());
                     }
                     break;
 
